@@ -1,0 +1,12 @@
+@font-face {
+  font-family: "MANSALVA FONT";
+  font-style: normal;
+  font-weight: normal;
+  src: local('MANSALVA FONT'), url('Mansalva-Regular.ttf') format('truetype'); 
+}
+
+h1 {
+  font-family: 'MANSALVA FONT';
+  font-weight: 200;
+  /*color: #0ccac4;*/
+}
