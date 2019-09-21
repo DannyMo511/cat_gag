@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import Post from '../components/Post.js';
 import Gif from '../components/Gif.js';
+import FactCard from '../components/FactCard.js';
 
 import './App.css';
 import 'tachyons'
@@ -10,12 +11,14 @@ class App extends Component {
   constructor(){
     super();
     this.state = {
-        username: ''
+        username: 'loading...',
+        fact: 'loading...'
       }
   }
 
   componentDidMount(){
-    this.grabUserName()
+    this.grabUserName();
+    this.grabFact();
   }
 
 
@@ -30,13 +33,20 @@ class App extends Component {
             })
       }
 
+  grabFact = () =>{
+    fetch("https://uselessfacts.jsph.pl/random.json?language=en")
+      .then(resp => resp.json())
+      .then(data => this.setState({fact: data['text']}))
+    }
+
   render(){
     const username = this.state.username;
-    const gif= <Gif gif_src="https://cataas.com/cat/gif"/>
+    const gif = <Gif gif_src="https://cataas.com/cat/gif"/>
+    const fact_card = <FactCard fact={this.state.fact}/>
     return (
       <div className="tc">
         <Post 
-            content= {gif}
+            content= {fact_card}
             user_pic_src="https://cataas.com/cat?width=150&height=100"
             username= {username}/>
       </div>
