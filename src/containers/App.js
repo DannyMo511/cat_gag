@@ -11,44 +11,72 @@ class App extends Component {
   constructor(){
     super();
     this.state = {
-        username: 'loading...',
-        fact: 'loading...'
+        usernames: [],
+        facts: []
       }
+
+    this.num_of_entrys = 9;
+    this.cat_pic_api = "https://cataas.com/cat?width=150&height=100";
+    this.cat_gif_api = "https://cataas.com/cat/gif"
   }
 
   componentDidMount(){
-    this.grabUserName();
-    this.grabFact();
+    this.grabUserNames(this.num_of_entrys);
+    this.grabFacts(this.num_of_entrys);
   }
 
 
-  grabUserName = () =>{
-    fetch("https://randomuser.me/api/")
-      .then(resp => resp.json())
-      .then(data => {
-              let {title, first, last} = data['results'][0]['name'];
-              let username = `${title}. ${first} ${last}`;
+  async grabUserNames(num_of_entrys){
+    const usernames = await Promise.all([...Array(num_of_entrys)].map(()=> this.grabUserName()));
+    this.setState({usernames: usernames})
+  }
 
-              this.setState({username: username});
-            })
-      }
+  async grabUserName(){
+    const resp = await fetch("https://randomuser.me/api/");
+    const data = await resp.json();
+    const {title, first, last} = data['results'][0]['name'];
+    const username = `${title}. ${first} ${last}`;
+    return username;
+  }
 
-  grabFact = () =>{
-    fetch("https://uselessfacts.jsph.pl/random.json?language=en")
-      .then(resp => resp.json())
-      .then(data => this.setState({fact: data['text']}))
-    }
+  async grabFacts(num_of_entrys){
+    const facts = await Promise.all([...Array(num_of_entrys)].map(()=> this.grabFact()));
+    this.setState({facts: facts});
+  }
+
+  async grabFact(){
+    const resp = await fetch("https://uselessfacts.jsph.pl/random.json?language=en");
+    const data = await resp.json();
+    return data['text'];
+  }
+
+  createFactPost(username, fact){
+    return this.createPost(<FactCard fact={fact}/>, username);
+  }
+
+  createGifPost(username){
+    return this.createPost(<Gif gif_src={this.cat_gif_api}/>, username);
+  }
+
+
+  createPost(content, username){
+    return (
+          <Post 
+            content= {content}
+            user_pic_src= {this.cat_pic_api}
+            username= {username}/>
+      )
+  }
 
   render(){
-    const username = this.state.username;
-    const gif = <Gif gif_src="https://cataas.com/cat/gif"/>
-    const fact_card = <FactCard fact={this.state.fact}/>
+    const {usernames, facts} = this.state;
     return (
       <div className="tc">
-        <Post 
-            content= {fact_card}
-            user_pic_src="https://cataas.com/cat?width=150&height=100"
-            username= {username}/>
+        {this.createFactPost(usernames[0], facts[0])}
+        {this.createFactPost(usernames[1], facts[1])}
+        {this.createGifPost(usernames[2])}
+        {this.createGifPost(usernames[3])}
+        
       </div>
     );
   }
