@@ -12,8 +12,8 @@ class App extends Component {
     super();
     this.state = {
         usernames: [],
-        facts: [],
-        profile_imgs: []
+        profile_imgs: [],
+        facts: []
       }
 
     this.num_of_entrys = 9;
@@ -62,34 +62,51 @@ class App extends Component {
     return data['text'];
   }
 
-  createFactPost(username, profile_img_src, fact){
-    return this.createPost(<FactCard fact={fact}/>, username, profile_img_src);
+  createFactPost(key, username, profile_img_src, fact){
+    return this.createPost(key, <FactCard fact={fact}/>, username, profile_img_src);
   }
 
-  createGifPost(username, profile_img_src){
+  createGifPost(key, username, profile_img_src){
     const rand = Math.ceil(Math.random()*10000).toString();
-    return this.createPost(<Gif gif_src={this.cat_gif_api + rand}/>, username, profile_img_src);
+    return this.createPost(key, <Gif gif_src={this.cat_gif_api + rand}/>, username, profile_img_src);
   }
 
 
-  createPost(content, username, profile_img_src){
+  createPost(key, content, username, profile_img_src){
     return (
-          <Post 
+          <Post
+            key = {key} 
             content= {content}
             user_pic_src= {profile_img_src}
             username= {username}/>
       )
   }
 
+  createFeed(usernames, profile_imgs, facts){
+    const min_length = Math.min(usernames.length,
+                                profile_imgs.length,
+                                facts.length);
+    let posts_arr = []
+    let i = 0;
+    for (; i<min_length; i++){
+      if (Math.round(Math.random())){
+        posts_arr.push(this.createFactPost(i, usernames[i], profile_imgs[i], facts[i]));
+      } else {
+        posts_arr.push(this.createGifPost(i, usernames[i], profile_imgs[i]));
+      }
+    }
+    return posts_arr;
+  }
+
+
+  
+
   render(){
-    const {usernames, facts, profile_imgs} = this.state;
+    const {usernames, profile_imgs, facts} = this.state;
     console.log(this.state);
     return (
       <div className="tc">
-        {this.createFactPost(usernames[0], profile_imgs[0], facts[0])}
-        {this.createFactPost(usernames[1], profile_imgs[1], facts[1])}
-        {this.createGifPost(usernames[2], profile_imgs[2])}
-        {this.createGifPost(usernames[3], profile_imgs[3])}
+        {this.createFeed(usernames, profile_imgs, facts)}
         
       </div>
     );
