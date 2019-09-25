@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import Post from '../components/Post.js';
 import Gif from '../components/Gif.js';
 import FactCard from '../components/FactCard.js';
+import Scroll from '../components/Scroll.js';
 
 import './App.css';
 import 'tachyons'
@@ -99,15 +100,18 @@ class App extends Component {
   }
 
 
-  
+
 
   render(){
     const {usernames, profile_imgs, facts} = this.state;
     console.log(this.state);
     return (
-      <div className="tc">
-        {this.createFeed(usernames, profile_imgs, facts)}
-        
+      <div className="center tc">
+      <div className="tc dib">
+        <Scroll>
+          {this.createFeed(usernames, profile_imgs, facts)}
+        </Scroll>
+      </div>
       </div>
     );
   }
