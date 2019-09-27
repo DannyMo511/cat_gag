@@ -5,8 +5,12 @@
   src: local('MANSALVA FONT'), url('Mansalva-Regular.ttf') format('truetype'); 
 }
 
-h1 {
+h1, h2, h3, h4 {
   font-family: 'MANSALVA FONT';
   font-weight: 200;
   /*color: #0ccac4;*/
+}
+
+body{
+	background-color: #C5AE68;
 }

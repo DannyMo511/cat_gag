@@ -3,6 +3,8 @@ import Post from '../components/Post.js';
 import Gif from '../components/Gif.js';
 import FactCard from '../components/FactCard.js';
 import Scroll from '../components/Scroll.js';
+import TopBanner from '../components/TopBanner.js';
+import BottomBanner from '../components/BottomBanner.js';
 
 import './App.css';
 import 'tachyons'
@@ -106,12 +108,16 @@ class App extends Component {
     const {usernames, profile_imgs, facts} = this.state;
     console.log(this.state);
     return (
-      <div className="center tc">
-      <div className="tc dib">
-        <Scroll>
-          {this.createFeed(usernames, profile_imgs, facts)}
-        </Scroll>
-      </div>
+      <div className="flex flex-column tc">
+        <TopBanner />
+        <div className="flex justify-center">
+          <p> Text </p>
+          <Scroll>
+            {this.createFeed(usernames, profile_imgs, facts)}
+          </Scroll>
+          <p> Text </p>
+        </div>
+        <BottomBanner />
       </div>
     );
   }

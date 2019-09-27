@@ -1,9 +1,11 @@
 import React from 'react';
+import "./Scroll.css";
 
 const Scroll = (props) => {
 	return (
-		<div style={{overflowY:'scroll', border: '1px solid black',
-					 height:'80vh', width:'70vw'}}>
+		<div className="flex-auto ba overflow-y-scroll"
+			 style={{
+					height: '80vh', background: '#FFF3D0',}}>
 			{props.children}
 		</div>
 		);
