@@ -2,7 +2,7 @@ import React from 'react';
 
 const BottomBanner = () =>{
 	return (
-			<div className="ma1 pa1">
+			<div>
 				<h3> developed by 
 				<a className="no-underline" 
 				   href="https://github.com/DannyMo511"

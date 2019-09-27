@@ -13,25 +13,32 @@ import 'tachyons'
 class App extends Component {
   constructor(){
     super();
-    this.state = {
-        usernames: [],
-        profile_imgs: [],
-        facts: []
-      }
 
-    this.num_of_entrys = 9;
+    this.base_num_of_entrys = 9;
     this.cat_pic_api = "https://cataas.com/cat?width=150&height=100&uniqueNum=";
     this.cat_gif_api = "https://cataas.com/cat/gif?uniqueNum=";
     this.facts_api = "https://uselessfacts.jsph.pl/random.json?language=en";
     this.usernames_api = "https://randomuser.me/api/";
+    
+    this.state = {
+        usernames: [],
+        profile_imgs: [],
+        facts: [],
+        num_of_entrys: this.base_num_of_entrys
+      }
   }
 
   componentDidMount(){
-    this.grabUserNames(this.num_of_entrys);
-    this.grabFacts(this.num_of_entrys);
-    this.grabUsersProfileSrcs(this.num_of_entrys);
+    this.grabDataFromAPIs();
   }
 
+
+  grabDataFromAPIs(){
+    let num_of_entrys = this.state.num_of_entrys
+    this.grabUserNames(num_of_entrys);
+    this.grabFacts(num_of_entrys);
+    this.grabUsersProfileSrcs(num_of_entrys);
+  }
 
   async grabUserNames(num_of_entrys){
     const usernames = await Promise.all([...Array(num_of_entrys)].map(()=> this.grabUserName()));
@@ -101,21 +108,29 @@ class App extends Component {
     return posts_arr;
   }
 
-
+  handleScroll(e){
+    const current_scroll_position = e.target.scrollTop;
+    const bottom = e.target.scrollHeight - Math.round(current_scroll_position) === e.target.clientHeight;
+    if (bottom) {
+      console.log("Rock bottom", e.target.scrollTop);
+      e.target.scrollTop = current_scroll_position - 200;
+      let new_num_of_entrys = this.state.num_of_entrys + this.base_num_of_entrys;
+      this.setState({num_of_entrys: new_num_of_entrys})
+      this.grabDataFromAPIs();
+    }
+  }
 
 
   render(){
-    const {usernames, profile_imgs, facts} = this.state;
+    const {usernames, profile_imgs, facts, ...rest} = this.state;
     console.log(this.state);
     return (
       <div className="flex flex-column tc">
         <TopBanner />
         <div className="flex justify-center">
-          <p> Text </p>
-          <Scroll>
+          <Scroll onScroll={this.handleScroll.bind(this)}>
             {this.createFeed(usernames, profile_imgs, facts)}
           </Scroll>
-          <p> Text </p>
         </div>
         <BottomBanner />
       </div>
